@@ -1681,6 +1681,8 @@ function getClassFee(){
 
 
 
+
+
 /* ==================================================
    現在の入力表示
 ================================================== */
@@ -1702,6 +1704,1009 @@ function renderCurrentEntry(){
     value.textContent =
       "料金未選択・0人";
 
-    rturn;
+    return;
 
   }
+
+
+  /*
+   * 料金を選択している場合
+   */
+
+  value.textContent =
+    `${state.currentPrice.toLocaleString("ja-JP")}円・${state.currentVisitors.toLocaleString("ja-JP")}人`;
+
+}
+
+
+
+/* ==================================================
+   入場料金ボタン生成
+================================================== */
+
+function renderPriceButtons(){
+
+  const priceList =
+    $("priceList");
+
+
+  priceList.innerHTML =
+    "";
+
+
+  /*
+   * 登録されている料金が
+   * 1つもない場合
+   */
+
+  if(
+    state.entryPrices.length === 0
+  ){
+
+    priceList.innerHTML = `
+
+      <div class="note">
+        入場料金がまだ登録されていません。
+        上の入力欄から料金を追加してください。
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+   * 登録済みの料金ごとに
+   * ボタンを生成
+   */
+
+  state.entryPrices.forEach(
+    price => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "price-button";
+
+
+      /*
+       * 現在選択中の料金なら
+       * selectedクラスを付けます。
+       */
+
+      if(
+        state.currentPrice === price
+      ){
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      button.textContent =
+        `${price.toLocaleString("ja-JP")}円`;
+
+
+      /*
+       * 料金ボタンを押したとき
+       */
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectEntryPrice(
+            price
+          );
+
+        }
+      );
+
+
+      priceList.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+
+
+/* ==================================================
+   入場料金選択
+================================================== */
+
+/*
+ * 200円ボタンを押す
+ *
+ * ↓
+ *
+ * currentPrice = 200
+ *
+ * 200円ボタンを押すたびに
+ * currentVisitorsが1増える
+ *
+ *
+ * その後300円を押す
+ *
+ * ↓
+ *
+ * currentPrice = 300
+ * currentVisitors = 1
+ *
+ * つまり、
+ * 200円で入力していた未確定人数は
+ * 新しい料金を選択した時点でリセットされます。
+ */
+
+function selectEntryPrice(price){
+
+  /*
+   * 料金が変わった場合、
+   * 現在入力中の人数をリセット
+   */
+
+  if(
+    state.currentPrice !== price
+  ){
+
+    state.currentPrice =
+      price;
+
+    state.currentVisitors =
+      0;
+
+  }
+
+
+  /*
+   * 同じ料金のボタンを押した場合は
+   * 1人追加
+   */
+
+  state.currentVisitors += 1;
+
+
+  save();
+
+  renderPriceButtons();
+
+  renderCurrentEntry();
+
+}
+
+
+
+/* ==================================================
+   入場料金追加
+================================================== */
+
+function addEntryPrice(){
+
+  const input =
+    $("priceSettingInput");
+
+
+  const price =
+    Math.floor(
+      safeNumber(
+        input.value
+      )
+    );
+
+
+  /*
+   * 不正な値
+   */
+
+  if(
+    price <= 0
+  ){
+
+    $("priceError").textContent =
+      "1円以上の入場料金を入力してください。";
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  /*
+   * 同じ料金がすでに存在する場合
+   */
+
+  if(
+    state.entryPrices.includes(price)
+  ){
+
+    $("priceError").textContent =
+      "その入場料金はすでに登録されています。";
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  /*
+   * 料金を追加
+   */
+
+  state.entryPrices.push(
+    price
+  );
+
+
+  /*
+   * 数字として並び替え
+   */
+
+  state.entryPrices.sort(
+    (a,b) => a - b
+  );
+
+
+  input.value = "";
+
+  $("priceError").textContent =
+    "";
+
+
+  save();
+
+  renderPriceButtons();
+
+}
+
+
+
+/* ==================================================
+   入場料金削減
+================================================== */
+
+function removeEntryPrice(){
+
+  const input =
+    $("priceSettingInput");
+
+
+  const price =
+    Math.floor(
+      safeNumber(
+        input.value
+      )
+    );
+
+
+  /*
+   * 不正な値
+   */
+
+  if(
+    price <= 0
+  ){
+
+    $("priceError").textContent =
+      "削除する入場料金を入力してください。";
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  /*
+   * 登録されている位置を探す
+   */
+
+  const index =
+    state.entryPrices.indexOf(
+      price
+    );
+
+
+  /*
+   * 存在しない場合
+   */
+
+  if(
+    index === -1
+  ){
+
+    $("priceError").textContent =
+      "その入場料金は登録されていません。";
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  /*
+   * 料金一覧から削除
+   *
+   * 注意：
+   *
+   * ここで過去のentriesは削除しません。
+   *
+   * そのため、
+   *
+   * 200円を登録
+   * ↓
+   * 200円で入場
+   * ↓
+   * 200円を料金一覧から削除
+   *
+   * としても、
+   * 過去の200円の履歴は残ります。
+   */
+
+  state.entryPrices.splice(
+    index,
+    1
+  );
+
+
+  /*
+   * 削除した料金が
+   * 現在選択中だった場合
+   */
+
+  if(
+    state.currentPrice === price
+  ){
+
+    state.currentPrice =
+      null;
+
+    state.currentVisitors =
+      0;
+
+  }
+
+
+  input.value = "";
+
+  $("priceError").textContent =
+    "";
+
+
+  save();
+
+  renderPriceButtons();
+
+  renderCurrentEntry();
+
+}
+
+
+
+/* ==================================================
+   「入場」
+================================================== */
+
+/*
+ * 現在選択中の料金と人数を
+ * 確定済み履歴へ保存します。
+ *
+ * ここで初めて売上として計上されます。
+ */
+
+function registerEntry(){
+
+  /*
+   * 料金未選択
+   */
+
+  if(
+    state.currentPrice === null
+  ){
+
+    $("entryError").textContent =
+      "入場料金を選択してください。";
+
+    return;
+
+  }
+
+
+  /*
+   * 人数が0人
+   */
+
+  if(
+    state.currentVisitors <= 0
+  ){
+
+    $("entryError").textContent =
+      "入場者数が0人です。料金ボタンを押してください。";
+
+    return;
+
+  }
+
+
+  /*
+   * 履歴へ保存
+   */
+
+  state.entries.push({
+
+    price:
+      state.currentPrice,
+
+    visitors:
+      state.currentVisitors
+
+  });
+
+
+  /*
+   * 「入場」が完了したら
+   * 現在の入力状態をリセット
+   *
+   * ただし料金一覧は残します。
+   */
+
+  state.currentPrice =
+    null;
+
+  state.currentVisitors =
+    0;
+
+
+  $("entryError").textContent =
+    "";
+
+
+  save();
+
+  renderAll();
+
+}
+
+
+
+/* ==================================================
+   履歴表示
+================================================== */
+
+function renderHistory(){
+
+  const body =
+    $("historyBody");
+
+
+  body.innerHTML =
+    "";
+
+
+  /*
+   * 履歴がない場合
+   */
+
+  if(
+    state.entries.length === 0
+  ){
+
+    body.innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="5"
+          class="empty"
+        >
+          まだ入力されていません
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+   * 売上累計
+   */
+
+  let cumulativeRevenue =
+    0;
+
+
+  /*
+   * 各履歴を表示
+   */
+
+  state.entries.forEach(
+    (entry,index) => {
+
+      const price =
+        safeNumber(
+          entry.price
+        );
+
+      const visitors =
+        safeNumber(
+          entry.visitors
+        );
+
+
+      /*
+       * この履歴だけの売上
+       */
+
+      const revenue =
+        price * visitors;
+
+
+      /*
+       * 売上累計へ追加
+       */
+
+      cumulativeRevenue +=
+        revenue;
+
+
+      const row =
+        document.createElement(
+          "tr"
+        );
+
+
+      /*
+       * 回
+       */
+
+      const numberCell =
+        document.createElement(
+          "td"
+        );
+
+      numberCell.textContent =
+        index + 1;
+
+
+      /*
+       * 入場料金
+       */
+
+      const priceCell =
+        document.createElement(
+          "td"
+        );
+
+      priceCell.textContent =
+        `${price.toLocaleString("ja-JP")} 円`;
+
+
+      /*
+       * 入場者数
+       */
+
+      const visitorsCell =
+        document.createElement(
+          "td"
+        );
+
+      visitorsCell.textContent =
+        `${visitors.toLocaleString("ja-JP")} 人`;
+
+
+      /*
+       * その回の売上
+       */
+
+      const revenueCell =
+        document.createElement(
+          "td"
+        );
+
+      revenueCell.textContent =
+        money(revenue);
+
+
+      /*
+       * 売上累計
+       */
+
+      const cumulativeCell =
+        document.createElement(
+          "td"
+        );
+
+      cumulativeCell.textContent =
+        money(
+          cumulativeRevenue
+        );
+
+
+      row.appendChild(
+        numberCell
+      );
+
+      row.appendChild(
+        priceCell
+      );
+
+      row.appendChild(
+        visitorsCell
+      );
+
+      row.appendChild(
+        revenueCell
+      );
+
+      row.appendChild(
+        cumulativeCell
+      );
+
+
+      body.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+
+/* ==================================================
+   画面全体の更新
+================================================== */
+
+function renderAll(){
+
+  /*
+   * 前提条件
+   */
+
+  $("funds").value =
+    state.funds || "";
+
+  $("cost").value =
+    state.cost || "";
+
+  $("advanceTicketPrice").value =
+    state.advanceTicketPrice || "";
+
+  $("advanceTickets").value =
+    state.advanceTickets || "";
+
+
+  /*
+   * 計算
+   */
+
+  const totalVisitors =
+    getTotalVisitors();
+
+  const earnings =
+    getEarnings();
+
+  const profit =
+    getProfit();
+
+  const classFee =
+    getClassFee();
+
+  const advanceRevenue =
+    getAdvanceRevenue();
+
+
+  /*
+   * 現在の収益
+   */
+
+  $("totalVisitors").textContent =
+    `${totalVisitors.toLocaleString("ja-JP")} 人`;
+
+  $("earnings").textContent =
+    money(earnings);
+
+  $("profit").textContent =
+    money(profit);
+
+
+  /*
+   * 前売り券売上
+   */
+
+  $("advanceRevenue").textContent =
+    money(advanceRevenue);
+
+
+  /*
+   * クラス費
+   */
+
+  $("classFee").textContent =
+    money(classFee);
+
+
+  /*
+   * 入場料金ボタン
+   */
+
+  renderPriceButtons();
+
+
+  /*
+   * 現在の入力状態
+   */
+
+  renderCurrentEntry();
+
+
+  /*
+   * 履歴
+   */
+
+  renderHistory();
+
+}
+
+
+
+/* ==================================================
+   前提条件入力
+================================================== */
+
+
+/*
+ * 資金
+ */
+
+$("funds").addEventListener(
+  "input",
+  () => {
+
+    state.funds =
+      Math.max(
+        0,
+        safeNumber(
+          $("funds").value
+        )
+      );
+
+
+    save();
+
+    renderAll();
+
+  }
+);
+
+
+/*
+ * 消費
+ */
+
+$("cost").addEventListener(
+  "input",
+  () => {
+
+    state.cost =
+      Math.max(
+        0,
+        safeNumber(
+          $("cost").value
+        )
+      );
+
+
+    save();
+
+    renderAll();
+
+  }
+);
+
+
+/*
+ * 前売り券料金
+ */
+
+$("advanceTicketPrice")
+  .addEventListener(
+    "input",
+    () => {
+
+      state.advanceTicketPrice =
+        Math.max(
+          0,
+          Math.floor(
+            safeNumber(
+              $("advanceTicketPrice")
+                .value
+            )
+          )
+        );
+
+
+      save();
+
+      renderAll();
+
+    }
+  );
+
+
+/*
+ * 前売り券販売数
+ */
+
+$("advanceTickets")
+  .addEventListener(
+    "input",
+    () => {
+
+      state.advanceTickets =
+        Math.max(
+          0,
+          Math.floor(
+            safeNumber(
+              $("advanceTickets").value
+            )
+          )
+        );
+
+
+      save();
+
+      renderAll();
+
+    }
+  );
+
+
+
+/* ==================================================
+   入場料金追加・削減
+================================================== */
+
+$("addPriceButton")
+  .addEventListener(
+    "click",
+    addEntryPrice
+  );
+
+
+$("removePriceButton")
+  .addEventListener(
+    "click",
+    removeEntryPrice
+  );
+
+
+
+/*
+ * Enterキーでも追加
+ */
+
+$("priceSettingInput")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(
+        event.key === "Enter"
+      ){
+
+        addEntryPrice();
+
+      }
+
+    }
+  );
+
+
+
+/* ==================================================
+   入場
+================================================== */
+
+$("entryButton")
+  .addEventListener(
+    "click",
+    registerEntry
+  );
+
+
+
+/* ==================================================
+   リセット
+================================================== */
+
+$("resetButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      const confirmed =
+        confirm(
+          "入力したデータをすべて削除しますか？"
+        );
+
+
+      if(!confirmed){
+
+        return;
+
+      }
+
+
+      /*
+       * stateを初期状態へ戻す
+       */
+
+      state.funds =
+        0;
+
+      state.cost =
+        0;
+
+      state.advanceTicketPrice =
+        DEFAULT_ADVANCE_TICKET_PRICE;
+
+      state.advanceTickets =
+        0;
+
+      state.entryPrices =
+        [];
+
+      state.currentPrice =
+        null;
+
+      state.currentVisitors =
+        0;
+
+      state.entries =
+        [];
+
+
+      save();
+
+      renderAll();
+
+    }
+  );
+
+
+
+/* ==================================================
+   初期表示
+================================================== */
+
+renderAll();
+
+
+</script>
+
+</body>
+
+</html>
