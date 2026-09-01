@@ -40,8 +40,8 @@ body{
 }
 
 button,
-input,
-select{
+input{
+
   font-family:inherit;
 }
 
@@ -80,7 +80,7 @@ h1{
 h2{
 
   margin:
-    0 0 16px;
+    0 0 18px;
 
   font-size:20px;
 }
@@ -98,6 +98,12 @@ h2{
     1fr 1fr;
 
   gap:18px;
+}
+
+.full{
+
+  grid-column:
+    1 / -1;
 }
 
 
@@ -118,12 +124,6 @@ h2{
     rgba(0,0,0,.07);
 }
 
-.full{
-
-  grid-column:
-    1 / -1;
-}
-
 
 /* ========================================
    入力欄
@@ -138,9 +138,9 @@ label{
 
   display:block;
 
-  font-weight:700;
-
   margin-bottom:8px;
+
+  font-weight:700;
 }
 
 .unit{
@@ -164,8 +164,7 @@ input{
   min-height:52px;
 
   padding:
-    10px
-    14px;
+    10px 14px;
 
   border:
     1px solid
@@ -173,9 +172,9 @@ input{
 
   border-radius:10px;
 
-  font-size:20px;
-
   background:#fff;
+
+  font-size:20px;
 }
 
 input:focus{
@@ -200,7 +199,7 @@ input:focus{
 
 
 /* ========================================
-   結果表示
+   現在の収益
 ======================================== */
 
 .results{
@@ -247,7 +246,7 @@ input:focus{
 
 
 /* ========================================
-   補助結果
+   補助結果表示
 ======================================== */
 
 .sub-result{
@@ -284,113 +283,37 @@ input:focus{
 
 .sub-result .amount{
 
-  font-weight:800;
-
   font-size:18px;
 
-  text-align:right;
+  font-weight:800;
 }
 
 
 /* ========================================
-   ボタン
+   前売り券売上表示
 ======================================== */
 
-button{
+.ticket-revenue{
 
-  width:100%;
+  margin-top:12px;
 
-  min-height:52px;
+  padding:
+    12px 14px;
 
-  border:0;
+  background:#f5f6f8;
 
   border-radius:10px;
 
-  font-size:18px;
+  color:#555;
 
-  font-weight:800;
+  font-size:14px;
 
-  cursor:pointer;
-
-  transition:
-    transform .1s,
-    background .15s;
+  line-height:1.6;
 }
 
-button:active{
-
-  transform:scale(.98);
-}
-
-
-/* 通常ボタン */
-
-.add{
-
-  background:#222;
-
-  color:#fff;
-}
-
-.add:hover{
-
-  background:#000;
-}
-
-
-/* 料金追加 */
-
-.add-price{
-
-  margin-top:8px;
-
-  background:#222;
-
-  color:#fff;
-}
-
-
-/* 削除 */
-
-.delete-price{
-
-  width:auto;
-
-  min-width:80px;
-
-  min-height:44px;
-
-  padding:
-    8px
-    14px;
-
-  background:#e8eaed;
+.ticket-revenue strong{
 
   color:#222;
-
-  font-size:15px;
-}
-
-.delete-price:hover{
-
-  background:#dcdfe3;
-}
-
-
-/* リセット */
-
-.reset{
-
-  margin-top:10px;
-
-  background:#e8eaed;
-
-  color:#222;
-}
-
-.reset:hover{
-
-  background:#dcdfe3;
 }
 
 
@@ -398,90 +321,231 @@ button:active{
    入場料金設定
 ======================================== */
 
-.price-list{
-
-  display:grid;
-
-  gap:10px;
-
-  margin-bottom:12px;
-}
-
-.price-row{
+.price-setting{
 
   display:grid;
 
   grid-template-columns:
-    1fr auto;
+    1fr auto auto;
 
-  align-items:center;
+  gap:8px;
 
-  gap:10px;
-
-  padding:10px;
-
-  border:
-    1px solid
-    #e2e4e7;
-
-  border-radius:10px;
-
-  background:#fafafa;
+  align-items:end;
 }
 
-.price-input{
+.price-setting .field{
 
-  min-height:48px;
-
-  font-size:18px;
+  margin-bottom:0;
 }
 
+.small-button{
 
-/* ========================================
-   入力対応
-======================================== */
+  width:auto;
 
-.visitor-input-area{
-
-  margin-top:24px;
-
-  padding-top:20px;
-
-  border-top:
-    1px solid
-    #e2e4e7;
-}
-
-select{
-
-  width:100%;
+  min-width:90px;
 
   min-height:52px;
 
   padding:
-    8px
-    12px;
+    0 16px;
 
-  border:
-    1px solid
-    #cfd3d8;
+  border:0;
 
   border-radius:10px;
 
-  background:#fff;
+  font-size:17px;
 
-  font-size:18px;
+  font-weight:800;
+
+  cursor:pointer;
 }
 
-select:focus{
+.add-price{
 
-  outline:none;
+  background:#222;
+
+  color:#fff;
+}
+
+.add-price:hover{
+
+  background:#000;
+}
+
+.remove-price{
+
+  background:#e8eaed;
+
+  color:#222;
+}
+
+.remove-price:hover{
+
+  background:#dcdfe3;
+}
+
+
+/* ========================================
+   登録料金一覧
+======================================== */
+
+.price-list{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(120px,1fr)
+    );
+
+  gap:10px;
+
+  margin-top:18px;
+}
+
+.price-button{
+
+  min-height:64px;
+
+  padding:
+    10px;
+
+  border:
+    2px solid
+    #d9dce0;
+
+  border-radius:12px;
+
+  background:#fff;
+
+  color:#222;
+
+  font-size:20px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:
+    transform .1s,
+    background .15s,
+    border-color .15s;
+}
+
+.price-button:hover{
+
+  background:#f5f6f8;
+}
+
+.price-button:active{
+
+  transform:scale(.97);
+}
+
+.price-button.selected{
 
   border-color:#222;
 
-  box-shadow:
-    0 0 0 3px
-    rgba(0,0,0,.08);
+  background:#222;
+
+  color:#fff;
+}
+
+
+/* ========================================
+   現在の入場入力
+======================================== */
+
+.current-entry{
+
+  margin-top:20px;
+
+  padding:18px;
+
+  border-radius:12px;
+
+  background:#f5f6f8;
+
+  text-align:center;
+}
+
+.current-entry-label{
+
+  color:#666;
+
+  font-size:15px;
+
+  font-weight:700;
+}
+
+.current-entry-value{
+
+  margin-top:6px;
+
+  font-size:
+    clamp(
+      28px,
+      6vw,
+      42px
+    );
+
+  font-weight:900;
+}
+
+.current-entry-note{
+
+  margin-top:6px;
+
+  color:#777;
+
+  font-size:14px;
+}
+
+
+/* ========================================
+   入場ボタン
+======================================== */
+
+.entry-button{
+
+  margin-top:14px;
+
+  background:#222;
+
+  color:#fff;
+}
+
+.entry-button:hover{
+
+  background:#000;
+}
+
+
+/* ========================================
+   注意・エラー
+======================================== */
+
+.note{
+
+  margin-top:8px;
+
+  color:#666;
+
+  font-size:14px;
+
+  line-height:1.6;
+}
+
+.error{
+
+  margin-top:12px;
+
+  color:#c62828;
+
+  font-weight:700;
+
+  text-align:center;
 }
 
 
@@ -500,15 +564,16 @@ select:focus{
 
   width:100%;
 
-  min-width:560px;
-
   border-collapse:collapse;
+
+  min-width:520px;
 }
 
 .history th,
 .history td{
 
-  padding:10px;
+  padding:
+    11px 10px;
 
   border-bottom:
     1px solid
@@ -525,11 +590,9 @@ select:focus{
 
 .history th{
 
-  white-space:nowrap;
+  color:#555;
 
   font-size:14px;
-
-  color:#555;
 }
 
 .empty{
@@ -544,73 +607,21 @@ select:focus{
 
 
 /* ========================================
-   注意書き
+   リセット
 ======================================== */
 
-.note{
+.reset{
 
-  color:#666;
+  margin-top:20px;
 
-  font-size:14px;
-
-  margin-top:8px;
-
-  line-height:1.6;
-}
-
-
-/* ========================================
-   前売り券情報
-======================================== */
-
-.advance-revenue-box{
-
-  margin-top:12px;
-
-  padding:14px;
-
-  background:#f5f6f8;
-
-  border-radius:10px;
-}
-
-.advance-revenue-box .title{
-
-  color:#555;
-
-  font-size:14px;
-
-  font-weight:700;
-
-  margin-bottom:6px;
-}
-
-.advance-revenue-box .calculation{
-
-  font-size:15px;
-
-  line-height:1.7;
-}
-
-.advance-revenue-box strong{
+  background:#e8eaed;
 
   color:#222;
 }
 
+.reset:hover{
 
-/* ========================================
-   エラー
-======================================== */
-
-.error{
-
-  margin-top:10px;
-
-  color:#c62828;
-
-  font-weight:700;
-
-  font-size:14px;
+  background:#dcdfe3;
 }
 
 
@@ -660,20 +671,45 @@ select:focus{
     margin-bottom:18px;
   }
 
+  .price-setting{
+
+    grid-template-columns:1fr 1fr;
+  }
+
+  .price-setting .field{
+
+    grid-column:
+      1 / -1;
+  }
+
+  .small-button{
+
+    width:100%;
+  }
+
+  .price-list{
+
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
   .value{
 
     font-size:30px;
   }
 
-  .price-row{
+}
 
-    grid-template-columns:
-      1fr;
-  }
 
-  .delete-price{
+/* ========================================
+   さらに小さい画面
+======================================== */
 
-    width:100%;
+@media(max-width:380px){
+
+  .price-list{
+
+    grid-template-columns:1fr;
   }
 
 }
@@ -688,452 +724,427 @@ select:focus{
 
 <div class="container">
 
+  <h1>クラスの収入管理 2.0</h1>
 
-<h1>クラスの収入管理 2.0</h1>
 
+  <div class="grid">
 
-<div class="grid">
 
+    <!-- ====================================
+         前提条件
+    ===================================== -->
 
-<!-- ==================================================
-     前提条件
-================================================== -->
+    <section class="card">
 
-<section class="card">
+      <h2>前提条件</h2>
 
-  <h2>前提条件</h2>
 
+      <!-- 資金 -->
 
-  <!-- 資金 -->
+      <div class="field">
 
-  <div class="field">
+        <label for="funds">
+          資金
+        </label>
 
-    <label for="funds">
-      資金
-    </label>
+        <div class="unit">
 
-    <div class="unit">
-
-      <input
-        id="funds"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="0"
-      >
-
-      <span>円</span>
-
-    </div>
-
-  </div>
-
-
-  <!-- 消費 -->
-
-  <div class="field">
-
-    <label for="cost">
-      消費
-    </label>
-
-    <div class="unit">
-
-      <input
-        id="cost"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="0"
-      >
-
-      <span>円</span>
-
-    </div>
-
-  </div>
-
-
-  <!-- 前売り券料金 -->
-
-  <div class="field">
-
-    <label for="advanceTicketPrice">
-      前売り券の料金
-    </label>
-
-    <div class="unit">
-
-      <input
-        id="advanceTicketPrice"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="例：100"
-      >
-
-      <span>円 / 枚</span>
-
-    </div>
-
-  </div>
-
-
-  <!-- 前売り券販売数 -->
-
-  <div class="field">
-
-    <label for="advanceTickets">
-      前売り券の販売数
-    </label>
-
-    <div class="unit">
-
-      <input
-        id="advanceTickets"
-        type="number"
-        min="0"
-        step="1"
-        placeholder="例：10"
-      >
-
-      <span>枚</span>
-
-    </div>
-
-  </div>
-
-
-  <!-- 前売り券売上 -->
-
-  <div class="advance-revenue-box">
-
-    <div class="title">
-      前売り券売上
-    </div>
-
-    <div
-      id="advanceCalculation"
-      class="calculation"
-    >
-      0円 × 0枚 ＝ 0円
-    </div>
-
-  </div>
-
-
-  <div class="note">
-
-    資金・消費・前売り券の料金・販売数を設定します。
-    前売り券売上は「料金 × 販売数」で自動計算されます。
-
-  </div>
-
-</section>
-
-
-
-<!-- ==================================================
-     現在の収益
-================================================== -->
-
-<section class="card">
-
-  <h2>現在の収益</h2>
-
-
-  <div class="results">
-
-
-    <!-- 入場者数 -->
-
-    <div class="result">
-
-      <div class="name">
-        入場者数
-      </div>
-
-      <div
-        class="value"
-        id="totalVisitors"
-      >
-        0 人
-      </div>
-
-    </div>
-
-
-    <!-- 売上 -->
-
-    <div class="result">
-
-      <div class="name">
-        売上
-      </div>
-
-      <div
-        class="value"
-        id="earnings"
-      >
-        0 円
-      </div>
-
-    </div>
-
-
-    <!-- 総収入 -->
-
-    <div class="result">
-
-      <div class="name">
-        総収入
-      </div>
-
-      <div
-        class="value"
-        id="profit"
-      >
-        0 円
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 前売り券売上 -->
-
-  <div class="sub-result">
-
-    <div class="label">
-      前売り券売上
-    </div>
-
-    <div
-      class="amount"
-      id="advanceRevenue"
-    >
-      0 円
-    </div>
-
-  </div>
-
-
-  <!-- クラス費 -->
-
-  <div class="sub-result">
-
-    <div class="label">
-      クラス費
-    </div>
-
-    <div
-      class="amount"
-      id="classFee"
-    >
-      0 円
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- ==================================================
-     入力対応
-================================================== -->
-
-<section class="card full">
-
-  <h2>入力対応</h2>
-
-
-  <!-- ================================================
-       入場料金設定
-  ================================================= -->
-
-  <h3>
-    入場料金設定
-  </h3>
-
-
-  <div
-    id="priceList"
-    class="price-list"
-  >
-  </div>
-
-
-  <button
-    id="addPriceButton"
-    class="add-price"
-  >
-    ＋ 入場料金を追加
-  </button>
-
-
-  <div class="note">
-
-    入場料金は複数設定できます。
-    例えば200円を設定した後に300円を追加することができます。
-    追加・削除しても、すでに記録された履歴は変更されません。
-
-  </div>
-
-
-  <!-- ================================================
-       入場者数入力
-  ================================================= -->
-
-  <div class="visitor-input-area">
-
-    <h3>
-      入場者数入力
-    </h3>
-
-
-    <div class="field">
-
-      <label for="entryPriceSelect">
-        今回の入場料金
-      </label>
-
-      <select id="entryPriceSelect">
-
-        <option value="">
-          入場料金を選択してください
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="field">
-
-      <label for="visitors">
-        今回の入場者数
-      </label>
-
-      <div class="unit">
-
-        <input
-          id="visitors"
-          type="number"
-          min="1"
-          step="1"
-          placeholder="例：5"
-        >
-
-        <span>人</span>
-
-      </div>
-
-    </div>
-
-
-    <button
-      id="addBtn"
-      class="add"
-    >
-      入場者数を追加
-    </button>
-
-
-    <div
-      id="inputError"
-      class="error"
-    >
-    </div>
-
-  </div>
-
-
-  <!-- ================================================
-       リセット
-  ================================================= -->
-
-  <button
-    id="resetBtn"
-    class="reset"
-  >
-    すべてリセット
-  </button>
-
-</section>
-
-
-
-<!-- ==================================================
-     入場者数履歴
-================================================== -->
-
-<section class="card full">
-
-  <h2>
-    入場者数の履歴
-  </h2>
-
-
-  <div class="history-wrapper">
-
-    <table class="history">
-
-      <thead>
-
-        <tr>
-
-          <th>
-            回
-          </th>
-
-          <th>
-            入場料金
-          </th>
-
-          <th>
-            今回の人数
-          </th>
-
-          <th>
-            今回の売上
-          </th>
-
-          <th>
-            売上累計
-          </th>
-
-        </tr>
-
-      </thead>
-
-
-      <tbody
-        id="historyBody"
-      >
-
-        <tr>
-
-          <td
-            colspan="5"
-            class="empty"
+          <input
+            id="funds"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
           >
-            まだ入力されていません
-          </td>
 
-        </tr>
+          <span>円</span>
 
-      </tbody>
+        </div>
 
-    </table>
+      </div>
+
+
+      <!-- 消費 -->
+
+      <div class="field">
+
+        <label for="cost">
+          消費
+        </label>
+
+        <div class="unit">
+
+          <input
+            id="cost"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
+          >
+
+          <span>円</span>
+
+        </div>
+
+      </div>
+
+
+      <!-- 前売り券料金 -->
+
+      <div class="field">
+
+        <label for="advanceTicketPrice">
+          前売り券の料金
+        </label>
+
+        <div class="unit">
+
+          <input
+            id="advanceTicketPrice"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="100"
+          >
+
+          <span>円 / 枚</span>
+
+        </div>
+
+      </div>
+
+
+      <!-- 前売り券販売数 -->
+
+      <div class="field">
+
+        <label for="advanceTickets">
+          前売り券の販売数
+        </label>
+
+        <div class="unit">
+
+          <input
+            id="advanceTickets"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
+          >
+
+          <span>枚</span>
+
+        </div>
+
+      </div>
+
+
+      <!-- 前売り券売上 -->
+
+      <div class="ticket-revenue">
+
+        前売り券売上：
+
+        <strong id="advanceRevenue">
+          0 円
+        </strong>
+
+      </div>
+
+
+      <div class="note">
+
+        前売り券売上は
+        「前売り券の料金 × 販売数」
+        で内部計算されます。
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ====================================
+         現在の収益
+    ===================================== -->
+
+    <section class="card">
+
+      <h2>現在の収益</h2>
+
+
+      <div class="results">
+
+
+        <!-- 入場者数 -->
+
+        <div class="result">
+
+          <div class="name">
+            入場者数
+          </div>
+
+          <div
+            id="totalVisitors"
+            class="value"
+          >
+            0 人
+          </div>
+
+        </div>
+
+
+        <!-- 売上 -->
+
+        <div class="result">
+
+          <div class="name">
+            売上
+          </div>
+
+          <div
+            id="earnings"
+            class="value"
+          >
+            0 円
+          </div>
+
+        </div>
+
+
+        <!-- 総収入 -->
+
+        <div class="result">
+
+          <div class="name">
+            総収入
+          </div>
+
+          <div
+            id="profit"
+            class="value"
+          >
+            0 円
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- ====================================
+         入力対応
+    ===================================== -->
+
+    <section class="card full">
+
+      <h2>入力対応</h2>
+
+
+      <!-- 入場料金の追加・削減 -->
+
+      <div class="price-setting">
+
+
+        <div class="field">
+
+          <label for="priceSettingInput">
+            入場料金設定
+          </label>
+
+          <div class="unit">
+
+            <input
+              id="priceSettingInput"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="例：200"
+            >
+
+            <span>円</span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="addPriceButton"
+          class="small-button add-price"
+        >
+          追加
+        </button>
+
+
+        <button
+          id="removePriceButton"
+          class="small-button remove-price"
+        >
+          削減
+        </button>
+
+
+      </div>
+
+
+      <div class="note">
+
+        入場料金を入力して「追加」を押すと、
+        その料金のボタンが作成されます。
+        削除したい料金を入力して「削減」を押してください。
+
+      </div>
+
+
+      <div
+        id="priceError"
+        class="error"
+      >
+      </div>
+
+
+      <!-- 入場料金ボタン -->
+
+      <div
+        id="priceList"
+        class="price-list"
+      >
+      </div>
+
+
+      <!-- 現在の入力状態 -->
+
+      <div class="current-entry">
+
+        <div class="current-entry-label">
+          現在の入場入力
+        </div>
+
+        <div
+          id="currentEntryValue"
+          class="current-entry-value"
+        >
+          料金未選択・0人
+        </div>
+
+        <div class="current-entry-note">
+          料金ボタンを押すと人数が1人ずつ増えます。
+        </div>
+
+      </div>
+
+
+      <!-- 入場 -->
+
+      <button
+        id="entryButton"
+        class="entry-button"
+      >
+        入場
+      </button>
+
+
+      <div
+        id="entryError"
+        class="error"
+      >
+      </div>
+
+
+    </section>
+
+
+
+    <!-- ====================================
+         入場者数の履歴
+    ===================================== -->
+
+    <section class="card full">
+
+      <h2>入場者数の履歴</h2>
+
+
+      <div class="history-wrapper">
+
+        <table class="history">
+
+          <thead>
+
+            <tr>
+
+              <th>回</th>
+
+              <th>入場料金</th>
+
+              <th>入場者数</th>
+
+              <th>売上</th>
+
+              <th>売上累計</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="historyBody">
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="empty"
+              >
+                まだ入力されていません
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- クラス費 -->
+
+      <div class="sub-result">
+
+        <div class="label">
+          クラス費
+        </div>
+
+        <div
+          id="classFee"
+          class="amount"
+        >
+          0 円
+        </div>
+
+      </div>
+
+
+      <!-- リセット -->
+
+      <button
+        id="resetButton"
+        class="reset"
+      >
+        すべてリセット
+      </button>
+
+
+    </section>
+
 
   </div>
-
-</section>
-
-
-</div>
 
 </div>
 
@@ -1143,59 +1154,69 @@ select:focus{
 
 
 /* ==================================================
-   ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-   
-                 設定エリア
-   
-   ★ 後から変更する可能性がある数値は
-     ここに何の数値なのかを明記しています。
-   
-   ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+   ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+   ★
+   ★  基本設定
+   ★
+   ★  後から変更する可能性がある数値
+   ★  はここにまとめています。
+   ★
+   ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 ================================================== */
 
 
 /*
- * クラス費の判定基準
+ * ================================================
+ * 前売り券の初期料金
+ * ================================================
  *
- * この数値以上の利潤なら
- * 「利潤 - クラス費基準控除額」
+ * サイトを初めて使用したときに
+ * 前売り券の料金欄へ入れる初期値です。
+ *
+ * 例：
+ * 100 → 100円 / 枚
+ *
+ * 実際の料金に合わせて変更してください。
+ */
+
+const DEFAULT_ADVANCE_TICKET_PRICE = 100;
+
+
+/*
+ * ================================================
+ * クラス費の判定基準
+ * ================================================
+ *
+ * CLASS_FEE_THRESHOLD
+ *
+ * 利潤がこの金額以上なら
+ * 「利潤 - CLASS_FEE_DEDUCTION」
  * でクラス費を計算します。
  *
- * 現在：
- *
- * 40,000円以上
- * → 利潤 - 20,000円
+ * 現在の設定：
+ * 40,000円
  */
 
 const CLASS_FEE_THRESHOLD = 40000;
 
 
 /*
- * 利潤が上記基準以上だった場合に
- * 利潤から引く金額
+ * ================================================
+ * クラス費の控除額
+ * ================================================
  *
- * 現在：
+ * 利潤が40,000円以上の場合、
  *
- * 20,000円
+ * 利潤 - 20,000円
+ *
+ * とするための20,000円です。
  */
 
 const CLASS_FEE_DEDUCTION = 20000;
 
 
-/*
- * 利潤が基準未満だった場合の
- * 割る数
- *
- * 現在：
- *
- * 利潤 ÷ 2
- */
-
-const CLASS_FEE_DIVISOR = 2;
-
-
 /* ==================================================
-   設定エリアここまで
+   設定ここまで
 ================================================== */
 
 
@@ -1210,193 +1231,189 @@ const $ = id =>
 
 
 /* ==================================================
-   初期データ
+   保存データ
 ================================================== */
 
 /*
- * 新しい入場料金を作る際に使用する
- * IDの連番です。
+ * このサイト専用の保存場所です。
+ *
+ * 旧サイトの
+ * visitorRevenueState
+ * とは別にしています。
+ *
+ * そのため旧サイトの
+ * 「price」「entries」などの構造が
+ * 2.0のデータ構造に混ざりません。
  */
 
-let nextPriceId = 1;
+const STORAGE_KEY =
+  "visitorRevenueStateV2";
 
 
 /*
- * state
- *
- * このオブジェクトにサイトのデータを保存します。
- *
+ * ================================================
+ * state のデータ構造
+ * ================================================
  *
  * funds
- * ----------------------------
- * 現在使える資金
- *
+ *   現在使える資金
  *
  * cost
- * ----------------------------
- * 消費した金額
- *
+ *   消費した金額
  *
  * advanceTicketPrice
- * ----------------------------
- * 前売り券1枚あたりの料金
- *
+ *   前売り券1枚あたりの料金
  *
  * advanceTickets
- * ----------------------------
- * 販売した前売り券の枚数
+ *   販売した前売り券の枚数
  *
+ * entryPrices
+ *   現在使用可能な入場料金一覧
  *
- * prices
- * ----------------------------
- * 現在設定されている入場料金
+ * currentPrice
+ *   現在選択中の入場料金
  *
+ * currentVisitors
+ *   現在選択中の料金で
+ *   「入場」をまだ確定していない人数
  *
  * entries
- * ----------------------------
- * 過去の入場者数履歴
+ *   「入場」を押して確定した履歴
  *
- * それぞれ
+ * entriesの1件は
  *
  * {
- *   priceId,
- *   price,
- *   count
+ *   price: 入場料金,
+ *   visitors: 入場者数
  * }
  *
- * を保存します。
+ * という形で保存されます。
  *
- * price は「その時点の料金」を
- * コピーして保存します。
+ * 例：
  *
- * そのため、後から料金設定を変更・削除しても
- * 過去の履歴は変化しません。
+ * [
+ *   {
+ *     price: 200,
+ *     visitors: 2
+ *   },
+ *   {
+ *     price: 300,
+ *     visitors: 5
+ *   }
+ * ]
+ *
+ * なら、
+ *
+ * 200円で2人
+ * 300円で5人
+ *
+ * が別々の履歴として保存されています。
  */
 
 const defaultState = {
 
-  funds:0,
+  funds: 0,
 
-  cost:0,
+  cost: 0,
 
-  advanceTicketPrice:0,
+  advanceTicketPrice:
+    DEFAULT_ADVANCE_TICKET_PRICE,
 
-  advanceTickets:0,
+  advanceTickets: 0,
 
-  prices:[],
+  entryPrices: [],
 
-  entries:[]
+  currentPrice: null,
+
+  currentVisitors: 0,
+
+  entries: []
 
 };
 
 
 
 /* ==================================================
-   データ読み込み
+   保存データ読み込み
 ================================================== */
 
-let state;
+/*
+ * localStorageに保存されているデータを
+ * 読み込みます。
+ *
+ * 保存データが壊れていた場合でも
+ * サイト全体が停止しないようにしています。
+ */
 
-try{
+function loadState(){
 
-  const saved =
-    localStorage.getItem(
-      'visitorRevenueState2'
-    );
+  try{
 
-
-  state =
-    saved
-      ? JSON.parse(saved)
-      : JSON.parse(
-          JSON.stringify(defaultState)
-        );
-
-
-}catch(error){
-
-  /*
-   * 保存データが壊れていた場合は
-   * 初期状態から開始します。
-   */
-
-  state =
-    JSON.parse(
-      JSON.stringify(defaultState)
-    );
-
-}
+    const saved =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
 
 
+    if(!saved){
 
-/* ==================================================
-   古いデータへの安全対策
-================================================== */
+      return {
+        ...defaultState
+      };
 
-if(!Array.isArray(state.prices)){
-
-  state.prices = [];
-
-}
-
-if(!Array.isArray(state.entries)){
-
-  state.entries = [];
-
-}
+    }
 
 
-state.funds =
-  Number.isFinite(Number(state.funds))
-    ? Number(state.funds)
-    : 0;
+    const parsed =
+      JSON.parse(saved);
 
 
-state.cost =
-  Number.isFinite(Number(state.cost))
-    ? Number(state.cost)
-    : 0;
+    return {
 
+      ...defaultState,
 
-state.advanceTicketPrice =
-  Number.isFinite(
-    Number(state.advanceTicketPrice)
-  )
-    ? Number(state.advanceTicketPrice)
-    : 0;
+      ...parsed,
 
+      entryPrices:
+        Array.isArray(parsed.entryPrices)
+          ? parsed.entryPrices
+          : [],
 
-state.advanceTickets =
-  Number.isFinite(
-    Number(state.advanceTickets)
-  )
-    ? Math.floor(
-        Number(state.advanceTickets)
-      )
-    : 0;
+      entries:
+        Array.isArray(parsed.entries)
+          ? parsed.entries
+          : []
 
+    };
 
+  }catch(error){
 
-/* ==================================================
-   次の料金IDを決定
-================================================== */
-
-state.prices.forEach(price => {
-
-  const id =
-    Number(price.id);
-
-  if(
-    Number.isFinite(id) &&
-    id >= nextPriceId
-  ){
-
-    nextPriceId =
-      id + 1;
+    return {
+      ...defaultState
+    };
 
   }
 
-});
+}
+
+
+const state =
+  loadState();
+
+
+
+/* ==================================================
+   データ保存
+================================================== */
+
+function save(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+
+}
 
 
 
@@ -1408,8 +1425,8 @@ function money(value){
 
   return (
     Math.round(value)
-      .toLocaleString('ja-JP')
-    + ' 円'
+      .toLocaleString("ja-JP")
+    + " 円"
   );
 
 }
@@ -1417,15 +1434,22 @@ function money(value){
 
 
 /* ==================================================
-   データ保存
+   数値の安全化
 ================================================== */
 
-function save(){
+/*
+ * 入力値が不正な場合でも
+ * 計算結果がNaNにならないようにします。
+ */
 
-  localStorage.setItem(
-    'visitorRevenueState2',
-    JSON.stringify(state)
-  );
+function safeNumber(value){
+
+  const number =
+    Number(value);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
 
 }
 
@@ -1436,72 +1460,23 @@ function save(){
 ================================================== */
 
 /*
- * 前売り券売上
+ * 前売り券売上 =
  *
- * 前売り券料金 × 販売数
+ * 前売り券料金
+ * ×
+ * 前売り券販売数
  */
 
-function getAdvanceTicketRevenue(){
+function getAdvanceRevenue(){
 
   return (
-    state.advanceTicketPrice *
-    state.advanceTickets
-  );
-
-}
-
-
-
-/* ==================================================
-   通常入場の売上
-================================================== */
-
-/*
- * この関数が今回のサイトで重要な部分です。
- *
- *
- * 各履歴を個別に計算します。
- *
- *
- * 例：
- *
- * 200円 × 5人 = 1,000円
- *
- * 300円 × 4人 = 1,200円
- *
- * 500円 × 2人 = 1,000円
- *
- *
- * そして、
- *
- * 1,000
- * ＋1,200
- * ＋1,000
- * ＝3,200円
- *
- *
- * として売上を返します。
- */
-
-function getNormalRevenue(){
-
-  return state.entries.reduce(
-    (total, entry) => {
-
-      const price =
-        Number(entry.price) || 0;
-
-      const count =
-        Number(entry.count) || 0;
-
-
-      return (
-        total +
-        price * count
-      );
-
-    },
-    0
+    safeNumber(
+      state.advanceTicketPrice
+    )
+    *
+    safeNumber(
+      state.advanceTickets
+    )
   );
 
 }
@@ -1512,14 +1487,24 @@ function getNormalRevenue(){
    入場者数合計
 ================================================== */
 
+/*
+ * 過去に「入場」を押して
+ * 確定した人数だけを合計します。
+ *
+ * 現在入力中の人数は、
+ * まだ「入場」を押していないため
+ * ここには含めません。
+ */
+
 function getTotalVisitors(){
 
   return state.entries.reduce(
     (total, entry) => {
 
       return (
-        total +
-        (Number(entry.count) || 0)
+        total
+        +
+        safeNumber(entry.visitors)
       );
 
     },
@@ -1531,42 +1516,60 @@ function getTotalVisitors(){
 
 
 /* ==================================================
-   利潤計算
+   入場による売上
 ================================================== */
 
 /*
- * 稼ぎ
- *
- * ＝通常入場売上
- * ＋前売り券売上
+ * ここが今回のサイトで最も重要な
+ * 売上計算部分です。
  *
  *
- * 利潤
+ * 各履歴について
  *
- * ＝資金
- * −消費
- * ＋稼ぎ
+ * 入場料金 × その料金で来た人数
+ *
+ * を計算し、
+ * 全履歴を合計します。
+ *
+ *
+ * 例：
+ *
+ * 200円 × 2人 = 400円
+ * 300円 × 5人 = 1500円
+ * 200円 × 3人 = 600円
+ *
+ * 入場売上 =
+ *
+ * 400
+ * +1500
+ * +600
+ *
+ * =2500円
  */
 
-function getProfit(){
+function getEntryRevenue(){
 
-  const normalRevenue =
-    getNormalRevenue();
+  return state.entries.reduce(
+    (total, entry) => {
 
+      const price =
+        safeNumber(
+          entry.price
+        );
 
-  const advanceRevenue =
-    getAdvanceTicketRevenue();
+      const visitors =
+        safeNumber(
+          entry.visitors
+        );
 
+      return (
+        total
+        +
+        price * visitors
+      );
 
-  const earnings =
-    normalRevenue +
-    advanceRevenue;
-
-
-  return (
-    state.funds -
-    state.cost +
-    earnings
+    },
+    0
   );
 
 }
@@ -1574,14 +1577,87 @@ function getProfit(){
 
 
 /* ==================================================
-   クラス費計算
+   総売上
 ================================================== */
 
-function getClassFee(profit){
+/*
+ * 総売上ではなく、
+ * このサイトで表示する「売上」です。
+ *
+ * 売上 =
+ *
+ * 入場による売上
+ * +
+ * 前売り券売上
+ */
 
-  /*
-   * 利潤が40,000円以上
-   */
+function getEarnings(){
+
+  return (
+    getEntryRevenue()
+    +
+    getAdvanceRevenue()
+  );
+
+}
+
+
+
+/* ==================================================
+   利潤
+================================================== */
+
+/*
+ * 旧サイトから引き継いだ計算式。
+ *
+ * 利潤 =
+ *
+ * 資金
+ * -
+ * 消費
+ * +
+ * 稼ぎ
+ *
+ * 今回は「稼ぎ」を
+ * 現在の売上として扱います。
+ */
+
+function getProfit(){
+
+  return (
+    safeNumber(state.funds)
+    -
+    safeNumber(state.cost)
+    +
+    getEarnings()
+  );
+
+}
+
+
+
+/* ==================================================
+   クラス費
+================================================== */
+
+/*
+ * 利潤が40,000円以上
+ *
+ * → 利潤 - 20,000円
+ *
+ *
+ * 利潤が40,000円未満
+ *
+ * → 利潤 ÷ 2
+ *
+ * → 小数点以下切り捨て
+ */
+
+function getClassFee(){
+
+  const profit =
+    getProfit();
+
 
   if(
     profit >=
@@ -1589,22 +1665,16 @@ function getClassFee(profit){
   ){
 
     return (
-      profit -
+      profit
+      -
       CLASS_FEE_DEDUCTION
     );
 
   }
 
 
-  /*
-   * 利潤が40,000円未満
-   *
-   * 小数点以下を切り捨てます。
-   */
-
   return Math.floor(
-    profit /
-    CLASS_FEE_DIVISOR
+    profit / 2
   );
 
 }
@@ -1612,150 +1682,26 @@ function getClassFee(profit){
 
 
 /* ==================================================
-   前提条件の表示
+   現在の入力表示
 ================================================== */
 
-function renderBasicInputs(){
+function renderCurrentEntry(){
 
-  $('funds').value =
-    state.funds === 0
-      ? ''
-      : state.funds;
-
-
-  $('cost').value =
-    state.cost === 0
-      ? ''
-      : state.cost;
-
-
-  $('advanceTicketPrice').value =
-    state.advanceTicketPrice === 0
-      ? ''
-      : state.advanceTicketPrice;
-
-
-  $('advanceTickets').value =
-    state.advanceTickets === 0
-      ? ''
-      : state.advanceTickets;
-
-}
-
-
-
-/* ==================================================
-   入場料金一覧表示
-================================================== */
-
-function renderPriceList(){
-
-  const list =
-    $('priceList');
-
-
-  list.innerHTML = '';
+  const value =
+    $("currentEntryValue");
 
 
   /*
-   * 入場料金がまだ1つもない場合
+   * まだ料金を選択していない場合
    */
 
-  if(state.prices.length === 0){
+  if(
+    state.currentPrice === null
+  ){
 
-    const empty =
-      document.createElement('div');
+    value.textContent =
+      "料金未選択・0人";
 
-    empty.className =
-      'note';
-
-    empty.textContent =
-      '入場料金が設定されていません。「入場料金を追加」から設定してください。';
-
-    list.appendChild(empty);
-
-    return;
+    rturn;
 
   }
-
-
-  state.prices.forEach(priceData => {
-
-    const row =
-      document.createElement('div');
-
-    row.className =
-      'price-row';
-
-
-    /*
-     * 料金入力欄
-     */
-
-    const input =
-      document.createElement('input');
-
-    input.type =
-      'number';
-
-    input.min =
-      '0';
-
-    input.step =
-      '1';
-
-    input.className =
-      'price-input';
-
-    input.value =
-      priceData.price;
-
-
-    /*
-     * 料金変更
-     *
-     * 重要：
-     *
-     * ここで変更しているのは
-     * 「現在使用できる料金設定」だけです。
-     *
-     * 過去のentriesに保存されたpriceは
-     * 変更しません。
-     */
-
-    input.addEventListener(
-      'input',
-      () => {
-
-        const value =
-          Math.max(
-            0,
-            Math.floor(
-              Number(input.value) || 0
-            )
-          );
-
-
-        priceData.price =
-          value;
-
-
-        save();
-
-        renderAll();
-
-      }
-    );
-
-
-    /*
-     * 削除ボタン
-     */
-
-    const deleteButton =
-      document.createElement('button');
-
-    deleteButton.className =
-      'delete-price';
-
-    deleteButton.textContent 
